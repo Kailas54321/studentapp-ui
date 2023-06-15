@@ -8,8 +8,7 @@ pipeline {
                 // git 'https://github.com/example/repository.git'
                 
                 // // Build the application
-                // sh 'npm install'
-                echo "hello world"
+                sh 'mvn clean package'
             }
         }
         
