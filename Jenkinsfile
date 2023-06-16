@@ -2,10 +2,6 @@ pipeline {
     agent any
     
     stages {
-        pipeline {
-    agent any
-    
-    stages {
         stage('Build stage') {
             steps {
                 sh 'sudo apt-get update -y '
