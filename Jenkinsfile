@@ -21,9 +21,9 @@ pipeline {
                 //sh 'echo \'FROM tomcat\\nWORKDIR /opt/tomcat/webapps/ \\nRUN apt-get install curl && RUN curl -O https://test-artifact-pritam.s3.us-east-2.amazonaws.com/student-${BUILD_ID}.war \\nEXPOSE 8080\' > dockerfile'
                 sh ''' 
                 cat << EOF > dockerfile
-FROM tomcat
+FROM tomcat:8
 COPY student-${BUILD_ID}.war ./webapps/
-EXPOSE 8081  
+EXPOSE 8080  
                 ''' //heredocs
                 sh 'cat dockerfile'
                 sh 'sudo chown jenkins: /usr/bin/docker'
