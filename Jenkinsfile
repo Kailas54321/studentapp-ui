@@ -2,13 +2,17 @@ pipeline {
     agent any
     
     stages {
-        stage('Build') {
+        pipeline {
+    agent any
+    
+    stages {
+        stage('Build stage') {
             steps {
-                // // Checkout source code from version control
-                // git 'https://github.com/example/repository.git'
-                
-                // // Build the application
+                sh 'sudo apt-get update -y '
+                sh 'sudo apt-get install maven -y'
                 sh 'mvn clean package'
+                sh 'sudo mkdir -p /artifact > /dev/null && sudo chown jenkins: /artifact'
+                sh 'sudo mv  /var/lib/jenkins/workspace/${JOB_NAME}/target/studentapp-2.2-SNAPSHOT.war /artifact/student-${BUILD_ID}.war'
             }
         }
         
