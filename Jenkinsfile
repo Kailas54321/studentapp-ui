@@ -11,28 +11,25 @@ pipeline {
                 sh 'sudo mv  /var/lib/jenkins/workspace/${JOB_NAME}/target/studentapp-2.2-SNAPSHOT.war /artifact/student-${BUILD_ID}.war'
             }
         }
-        
-    //     stage('Test') {
-    //         steps {
-    //             // Run tests
-    //             sh 'npm test'
-    //         }
-    //     }
-        
-    //     stage('Deploy') {
-    //         steps {
-    //             // Deploy the application
-    //             sh 'npm run deploy'
-    //         }
-    //     }
-    // }
-    
-    // post {
-    //     success {
-    //         // Send a notification on success
-    //         echo 'Deployment successful. Sending notification...'
-    //         // Implement notification mechanism here (e.g., sending an email, Slack message, etc.)
-    //     }
+        stage('docker'){
+        steps {
+                sh 'sudo apt-get install docker.io -y'
+                sh 'sudo apt-get update -y '
+                sh 'sudo systemctl start docker'
+                sh 'sudo systemctl enable docker'
+                sh 'cp -rv /artifact/student-${BUILD_ID}.war student-${BUILD_ID}.war'
+                //sh 'echo \'FROM tomcat\\nWORKDIR /opt/tomcat/webapps/ \\nRUN apt-get install curl && RUN curl -O https://test-artifact-pritam.s3.us-east-2.amazonaws.com/student-${BUILD_ID}.war \\nEXPOSE 8080\' > dockerfile'
+                sh ''' 
+                cat << EOF > dockerfile
+FROM tomcat
+COPY student-${BUILD_ID}.war ./webapps/
+EXPOSE 8081  
+                ''' //heredocs
+                sh 'cat dockerfile'
+                sh 'sudo chown jenkins: /usr/bin/docker'
+                sh 'sudo docker build .'
+            }
+        }
         
     //     failure {
     //         // Send a notification on failure
